@@ -1,15 +1,86 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
+
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "登录",
+				"backgroundColorTop": "#005DC7",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index"
+				}
 			}
+		}, {
+			"path": "pages/workOrderDetails/index",
+			"style": {
+				"navigationBarTitleText": "工单详情",
+				"backgroundColorTop": "#005DC7",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index",
+					"van-cell": "/wxcomponents/vant/dist/cell/index",
+					"van-cell-group": "/wxcomponents/vant/dist/cell-group/index",
+					"van-nav-bar": "/wxcomponents/vant/dist/nav-bar/index",
+					"van-icon": "/wxcomponents/vant/dist/icon/index",
+					"van-steps": "/wxcomponents/vant/dist/steps/index",
+					"van-image": "/wxcomponents/vant/dist/steps/index"
+				}
+			}
+		},
+		{
+			"path": "pages/lookorder/index",
+			"style": {
+				"navigationBarTitleText": "工单",
+				"backgroundColorTop": "#005DC7",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index",
+					"van-cell": "/wxcomponents/vant/dist/cell/index",
+					"van-cell-group": "/wxcomponents/vant/dist/cell-group/index",
+					"van-nav-bar": "/wxcomponents/vant/dist/nav-bar/index",
+					"van-icon": "/wxcomponents/vant/dist/icon/index"
+				}
+			}
+		},
+
+		{
+			"path": "pages/work/index",
+			"style": {
+				"navigationBarTitleText": "创建工单",
+				"backgroundColorTop": "#005DC7",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index",
+					"van-field": "/wxcomponents/vant/dist/field/index",
+					"van-nav-bar": "/wxcomponents/vant/dist/nav-bar/index",
+					"van-icon": "/wxcomponents/vant/dist/icon/index"
+				}
+			}
+		},
+		{
+			"path": "pages/home/index",
+			"style": {
+				"navigationBarTitleText": "主页",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom",
+				"onReachBottomDistance": 50,
+				"backgroundColorTop": "#005DC7",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index",
+					"van-tag": "/wxcomponents/vant/dist/tag/index",
+					"van-icon": "/wxcomponents/vant/dist/icon/index"
+				}
+			}
+		},
+
+
+		{
+			"path": "pages/my/index"
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "掌上e检测",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	}
