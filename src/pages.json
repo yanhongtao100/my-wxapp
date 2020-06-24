@@ -1,6 +1,15 @@
 {
 	"pages": [
-
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"backgroundColorTop": "#005DC7",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index"
+				}
+			}
+		},
 		{
 			"path": "pages/index/index",
 			"style": {
