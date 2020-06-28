@@ -7,63 +7,71 @@
       </div>
       <div class="waring_grop">
         <div class="warning_box">
-          <div class="num_box num_box_active" >
-            <h2>5</h2>
-            <span>进行中</span>
+          <div
+            class="num_box"
+            :class="{ num_box_active: is_underway }"
+            @click="getUnderway"
+          >
+            <h2>{{ info.underway }}</h2>
+            <span>待处理</span>
           </div>
         </div>
         <div class="warning_box">
-          <div class="num_box">
-            <h2>5</h2>
+          <div
+            class="num_box"
+            :class="{ num_box_active: is_peading }"
+            @click="getPeading"
+          >
+            <h2>{{ info.peading }}</h2>
             <span>进行中</span>
             <div class="border_left"></div>
             <div class="border_right"></div>
           </div>
         </div>
         <div class="warning_box">
-          <div class="num_box">
-            <h2>5</h2>
-            <span>进行中</span>
+          <div
+            class="num_box"
+            :class="{ num_box_active: is_finish }"
+            @click="getFinish"
+          >
+            <h2>{{ info.finish }}</h2>
+            <span>已完成</span>
           </div>
         </div>
       </div>
       <div class="work_order">
         <div class="order">
           <img src="/static/组 38@2x.png" alt="" />
-          <span>派遣工单</span>
+          <span>警报工单</span>
         </div>
         <div class="order">
           <img src="/static/组 39@2x.png" alt="" />
-          <span>新建工单</span>
+          <span>人工工单</span>
         </div>
         <div class="border_order"></div>
       </div>
-      <div class="portrait"></div>
+      <div class="portrait">
+        <img :src="user.avatarUrl" alt="" class="avatar" />
+      </div>
     </div>
 
     <div class="card_container">
-      <div class="card">
+      <div class="card" v-for="(item, index) in info.data" :key="index">
         <div class="order_title">
-          高速左摄像头连接断开
-          <van-tag round type="danger">待处理</van-tag>
+          {{ item.title }}
+          <template v-if="item.event == 0">
+            <van-tag round type="primary">已完成</van-tag>
+          </template>
+          <template v-if="item.event == 1">
+            <van-tag round type="warning">待处理</van-tag>
+          </template>
+          <template v-if="item.event == 2">
+            <van-tag round type="success">进行中</van-tag>
+          </template>
         </div>
         <div class="order_container">
-          <span class="warning_container">警报状态：设备断开</span>
-          <span class="warning_container_r">警报位置：石按高速门架01</span>
-          <span class="warning_container">负责人：未指定</span>
-          <span class="warning_container_r">警报时间：2020/06/18 11:38</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="order_title">
-          高速左摄像头连接断开
-          <van-tag round type="danger">待处理</van-tag>
-        </div>
-        <div class="order_container">
-          <span class="warning_container">警报状态：设备断开</span>
-          <span class="warning_container_r">警报位置：石按高速门架01</span>
-          <span class="warning_container">负责人：未指定</span>
-          <span class="warning_container_r">警报时间：2020/06/18 11:38</span>
+          <span class="warning_container_r">警报位置：{{ item.proxi }}</span>
+          <span class="warning_container_r">警报时间：{{ item.time }}</span>
         </div>
       </div>
     </div>
@@ -76,14 +84,115 @@ export default {
   components: {},
   props: {},
   data() {
-    return {};
+    return {
+      code: "",
+      info: {},
+      user: {},
+      is_underway: true,
+      is_peading: false,
+      is_finish: false,
+    };
   },
-  created() {},
+  onLoad(e) {
+    let _this = this;
+    _this.code = e.code;
+    uni.request({
+      url: `http://localhost:8080/wxapp/user/info`,
+      data: {
+        code: e.code,
+      },
+      success(res) {
+        console.log(res.data);
+        // 如果是管理员
+        if (res.data.identity === 0) {
+          uni.request({
+            url: `http://localhost:8080/wxapp/home/msg`,
+            data: {
+              code: e.code,
+              event: 1,
+            },
+            success(re) {
+              _this.info = re.data;
+              console.log("管理员", _this.info);
+            },
+          });
+        } else if (res.data.identity === 1) {
+        } else if (res.data.identity === 2) {
+        } else {
+          uni.showToast({
+            title: "参数错误",
+            icon: "none",
+          });
+        }
+      },
+    });
+  },
+  created() {
+    let _this = this;
+    uni.getUserInfo({
+      success(res) {
+        _this.user = JSON.parse(res.rawData);
+        console.log(_this.user);
+      },
+    });
+  },
   mounted() {},
   activited() {},
   update() {},
   beforeRouteUpdate() {},
   methods: {
+    getUnderway() {
+      this.is_finish = false;
+      this.is_peading = false;
+      this.is_underway = true;
+      var that = this;
+      uni.request({
+        url: `http://localhost:8080/wxapp/home/msg`,
+        data: {
+          code: that.code,
+          event: 1,
+        },
+        success(re) {
+          that.info = re.data;
+          console.log("管理员", that.info);
+        },
+      });
+    },
+    getPeading() {
+      this.is_finish = false;
+      this.is_peading = true;
+      this.is_underway = false;
+      var that = this;
+      uni.request({
+        url: `http://localhost:8080/wxapp/home/msg`,
+        data: {
+          code: that.code,
+          event: 2,
+        },
+        success(re) {
+          that.info = re.data;
+          console.log("管理员", that.info);
+        },
+      });
+    },
+    getFinish() {
+      this.is_finish = true;
+      this.is_peading = false;
+      this.is_underway = false;
+      var that = this;
+      uni.request({
+        url: `http://localhost:8080/wxapp/home/msg`,
+        data: {
+          code: that.code,
+          event: 0,
+        },
+        success(re) {
+          that.info = re.data;
+          console.log("管理员", that.info);
+        },
+      });
+    },
+
     onPullDownRefresh() {
       console.log(123);
 
@@ -239,9 +348,15 @@ export default {
       border-radius: 50%;
       background-color: #fff;
       z-index: 1;
-      position: absolute;
-      top: 170rpx;
-      right: 40rpx;
+      position: fixed;
+      bottom: 20rpx;
+      right: 20rpx;
+      .avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        z-index: 1;
+      }
     }
   }
   .card_container {

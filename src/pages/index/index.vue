@@ -41,7 +41,7 @@
         type="primary"
         open-type="getUserInfo"
         lang="zh_CN"
-        @getuserinfo="bindgetuserinfo"
+        @click="login"
         >登录</van-button
       >
     </div>
@@ -59,23 +59,36 @@ export default {
       list: "", //用户数据列表
       pwd: "", //用户密码
       user: "", //用户名
-      wx_id: "", //微信id
+      ytd_id: "", //微信id
     };
   },
   onLoad() {
+    var _this = this;
+    uni.login({
+      success(res) {
+        _this.code = res.code;
+      },
+      fail() {
+        uni.showToast({
+          title: "网络连接失败，请稍后",
+          icon: none,
+        });
+      },
+    });
     let that = this;
     uni.checkSession({
       success(res) {
-        if (res) {
-          that.routeTo(); //用户有登录信息的话直接跳转
+        if ((res.errMsg != "checkSession:ok")) {
+          uni.login({
+            success(res) {
+              _this.code = res.code;
+              console.log("再次登录，现在的code为：", res.code);
+            },
+          });
         }
       },
       fail() {
         // 如果没有的话重新登录
-        uni.showToast({
-          title: "请重新登录",
-          icon: "none",
-        });
       },
     });
   },
@@ -86,57 +99,41 @@ export default {
         url: "/pages/home/index",
       });
     },
-    bindgetuserinfo(data) {
-      if (data.detail.errMsg == "getUserInfo:fail auth deny"){
-				uni.showModal({
-					title:"请登录",
-					success(){	
-					}
-				})
-			}
-        //获取用户信息方法
-      if (data.detail.rawData) {
-				// this.routeTo()
-				console.log(data);
-				
-        this.list = JSON.parse(data.detail.rawData);
-      }
-    },
-    login_first() {
-      //初次登录绑定方法
-      uni.request({
-        url: "192.168.1.40/wxapp/user/first_login",
-        data: {
-          pwd: this.pwd,
-          user: this.user,
-        },
-        success(res) {
-          if (res.status == 200) {
-            uni.showToast({
-              title: "绑定成功",
-              success() {
-                this.routeTo();
-              },
-            });
-          }
-        },
-      });
-    },
+    // 登录方法
+
     login() {
-      //登录方法
-      uni.request({
-        url: "/user/login",
-        data: {
-          wx_id: this.wx_id,
-        },
-        success(res) {
-          if (res.data.bind_status == 0) {
-            this.login_first();
-          } else {
-            routeTo();
-          }
-        },
-      });
+      // 验证是否为空
+      if ((this.user.trim() === "") | (this.pwd.trim() === "")) {
+        uni.showToast({
+          title: "请输入账号密码",
+          icon: "none",
+        });
+      } else {
+        //登录方法
+        uni.request({
+          url: "http://localhost:8080/wxapp/user/firstLogin",
+          data: {
+            code: this.code,
+            pwd: this.pwd,
+            user: this.user,
+          },
+          success(res) {
+            console.log(res);
+
+            // if (res.data.msg == "绑定成功") {
+            //   uni.showModal({
+            //     title: "绑定成功，请稍后",
+            //     showCancel: false,
+            //     success() {
+            //       uni.redirectTo({
+            //         url: "/pages/home/index",
+            //       });
+            //     },
+            //   });
+            // }
+          },
+        });
+      }
     },
   },
 };
