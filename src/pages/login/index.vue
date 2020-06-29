@@ -29,12 +29,12 @@ export default {
     var _this = this;
     uni.login({
       success(res) {
-        _this.code = res.code;
+				_this.code = res.code;
       },
       fail() {
         uni.showToast({
           title: "网络连接失败，请稍后",
-          icon: none,
+          icon: "none",
         });
       },
     });
@@ -80,6 +80,10 @@ export default {
         });
       }
       if (data.detail.rawData) {
+				uni.showLoading({
+					title:'登陆中',
+					mask:true
+				})
         // 如果用户确认登录了
         try {
           // 尝试调登录接口
@@ -98,11 +102,14 @@ export default {
                     success() {
                       // 轻提示显示之后2秒开始跳转主页，最好带上id和身份信息？？？？？
                       setTimeout(function() {
-                        uni.redirectTo({
-                          url: `/pages/home/index?code=${_this.code}`,
+                        uni.switchTab({
+                          url:`/pages/home/index`,
                         });
                       }, 2000);
-                    },
+										},
+										fail(rej){
+											console.log(rej);
+										}
                   });
                 } else if (res.data.data.login_status === 0) {
                   // 如果登录状态为0，让用户稍后再试
@@ -124,10 +131,10 @@ export default {
                 });
               }
             },
-            fail(rej) {
+            fail(rej) {					
 							// 如果出现问题，抛出问题
               uni.showToast({
-                title: `服务器错误${rej}`,
+                title: `服务器错误${rej.errMsg}`,
                 icon: "none",
               });
             },

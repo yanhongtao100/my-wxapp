@@ -1,10 +1,8 @@
 {
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"backgroundColorTop": "#005DC7",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/dist/button/index"
 				}
@@ -14,7 +12,6 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"backgroundColorTop": "#005DC7",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/dist/button/index"
 				}
@@ -23,7 +20,6 @@
 			"path": "pages/workOrderDetails/index",
 			"style": {
 				"navigationBarTitleText": "工单详情",
-				"backgroundColorTop": "#005DC7",
 				"navigationStyle": "custom",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/dist/button/index",
@@ -40,7 +36,6 @@
 			"path": "pages/lookorder/index",
 			"style": {
 				"navigationBarTitleText": "工单",
-				"backgroundColorTop": "#005DC7",
 				"navigationStyle": "custom",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/dist/button/index",
@@ -56,7 +51,6 @@
 			"path": "pages/work/index",
 			"style": {
 				"navigationBarTitleText": "创建工单",
-				"backgroundColorTop": "#005DC7",
 				"navigationStyle": "custom",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/dist/button/index",
@@ -73,7 +67,6 @@
 				"enablePullDownRefresh": true,
 				"navigationStyle": "custom",
 				"onReachBottomDistance": 50,
-				"backgroundColorTop": "#005DC7",
 				"usingComponents": {
 					"van-button": "/wxcomponents/vant/dist/button/index",
 					"van-tag": "/wxcomponents/vant/dist/tag/index",
@@ -84,7 +77,30 @@
 
 
 		{
-			"path": "pages/my/index"
+			"path": "pages/my/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index",
+					"van-nav-bar": "/wxcomponents/vant/dist/nav-bar/index",
+					"van-tag": "/wxcomponents/vant/dist/tag/index",
+					"van-cell": "/wxcomponents/vant/dist/cell/index",
+					"van-cell-group": "/wxcomponents/vant/dist/cell-group/index"
+				}
+			}
+		},
+		{
+			"path": "pages/history/index",
+			"style": {
+				"navigationBarTitleText": "历史警报",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-nav-bar": "/wxcomponents/vant/dist/nav-bar/index",
+					"van-tab": "/wxcomponents/vant/dist/tab/index",
+					"van-tabs": "/wxcomponents/vant/dist/tabs/index"
+				}
+			}
 		}
 	],
 	"globalStyle": {
@@ -92,5 +108,21 @@
 		"navigationBarTitleText": "掌上e检测",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"list": [{
+				"pagePath": "pages/home/index",
+				"text": "主页",
+				"iconPath": "static/广播@2x.png",
+				"selectedIconPath": "static/广播@2x(1).png"
+			},
+			{
+				"pagePath": "pages/my/index",
+				"text": "我的",
+				"iconPath": "static/icon_账号@2x.png",
+				"selectedIconPath": "static/icon_账号@2x(1).png"
+			}
+		],
+		"selectedColor": "#488ae1"
 	}
 }

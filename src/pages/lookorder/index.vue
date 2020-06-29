@@ -1,28 +1,35 @@
 <template>
-<div>
-  <div class="container">
-    <van-nav-bar title="标题" left-text="返回" left-arrow />
-    <div class="header_box">
-      <div class="title_text">
-        高速门架左车道摄像头断开
+  <div>
+    <div class="container">
+      <van-nav-bar
+        title="标题"
+        left-text="返回"
+        left-arrow
+        @click-left="onClickLeft"
+      />
+      <div class="header_box">
+        <div class="title_text">
+          {{ orderMessage.title }}
+        </div>
+        <div class="time">
+          {{ orderMessage.warning_time }}
+        </div>
       </div>
-      <div class="time">
-        2020/06/18 11:38
+      <div class="particulars">
+        <van-cell-group>
+          <van-cell title="警报描述:" :value="orderMessage.equipment" />
+          <van-cell title="警报地区:" :value="orderMessage.proxi" />
+          <van-cell title="警报设备:" :value="orderMessage.equipment" />
+          <van-cell title="设备IP:" :value="orderMessage.equipmen_id" />
+          <van-cell title="设备编号:" :value="orderMessage.equipmen_serial" />
+        </van-cell-group>
+      </div>
+      <div v-if="orderMessage.is_look">
+        <h2>未派遣负责人</h2>
+        <van-button type="primary">指定负责人</van-button>
       </div>
     </div>
-    <div class="particulars">
-      <van-cell-group>
-        <van-cell title="警报描述:" value="设备断开" />
-        <van-cell title="警报地区:" value="石安大区-石安高速门架01" />
-        <van-cell title="警报设备:" value="左车道摄像头01" />
-        <van-cell title="设备IP:" value="10.5.63.9" />
-        <van-cell title="设备编号:" value="1212313213213135" />
-      </van-cell-group>
-    </div>
-    <h2>未派遣负责人</h2>
-		    <van-button type="primary">指定负责人</van-button>
   </div>
-	</div>
 </template>
 
 <script>
@@ -31,14 +38,42 @@ export default {
   components: {},
   props: {},
   data() {
-    return {};
+    return {
+      orderMessage: {},
+    };
   },
   created() {},
+  onLoad(e) {
+    var _this = this;
+    uni.request({
+      url: `http://localhost:8080/wxapp/order/info`,
+      data: {
+        id: e.id,
+      },
+      success(re) {
+        _this.orderMessage = re.data.data;
+        console.log(_this.orderMessage);
+      },
+    });
+  },
   mounted() {},
   activited() {},
   update() {},
   beforeRouteUpdate() {},
-  methods: {},
+  methods: {
+    onClickLeft() {
+
+      uni.switchTab({
+        url: "/pages/home/index",
+        success(res) {
+          console.log(res);
+        },
+        fail(rej) {
+          console.log(rej);
+        },
+      });
+    },
+  },
   filter: {},
   computed: {},
   watch: {},

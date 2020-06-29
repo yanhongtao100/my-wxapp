@@ -39,24 +39,30 @@
           </div>
         </div>
       </div>
-      <div class="work_order">
-        <div class="order">
+      <div class="work_order" v-if="identity != 2">
+        <div class="order" @click="filter(1)">
           <img src="/static/组 38@2x.png" alt="" />
-          <span>警报工单</span>
+          <span class="order_filter" :class="{ bottom_border: is_show_left }"
+            >警报工单</span
+          >
         </div>
-        <div class="order">
+        <div class="order" @click="filter(0)">
           <img src="/static/组 39@2x.png" alt="" />
-          <span>人工工单</span>
+          <span class="order_filter" :class="{ bottom_border: is_show_right }"
+            >人工工单</span
+          >
         </div>
         <div class="border_order"></div>
-      </div>
-      <div class="portrait">
-        <img :src="user.avatarUrl" alt="" class="avatar" />
       </div>
     </div>
 
     <div class="card_container">
-      <div class="card" v-for="(item, index) in info.data" :key="index">
+      <div
+        class="card"
+        v-for="(item, index) in info.data"
+        :key="index"
+        @click="onLook(item)"
+      >
         <div class="order_title">
           {{ item.title }}
           <template v-if="item.event == 0">
@@ -85,45 +91,61 @@ export default {
   props: {},
   data() {
     return {
-      code: "",
-      info: {},
-      user: {},
+      code: "", //
+      identity: 2, //人员权限
+      info: {}, //工单资料
+      copyinfo: {},
+      user: {}, //用户资料
       is_underway: true,
       is_peading: false,
       is_finish: false,
+      is_show_left: false,
+      is_show_right: false,
     };
   },
-  onLoad(e) {
+  onLoad() {
     let _this = this;
-    _this.code = e.code;
-    uni.request({
-      url: `http://localhost:8080/wxapp/user/info`,
-      data: {
-        code: e.code,
-      },
+    //因为tabbar里无法传参数，所以只好在这里重新获取code值，
+    //然后再请求用户权限信息和工单信息，可怕的回调地狱啊
+    uni.login({
       success(res) {
-        console.log(res.data);
-        // 如果是管理员
-        if (res.data.identity === 0) {
-          uni.request({
-            url: `http://localhost:8080/wxapp/home/msg`,
-            data: {
-              code: e.code,
-              event: 1,
-            },
-            success(re) {
-              _this.info = re.data;
-              console.log("管理员", _this.info);
-            },
-          });
-        } else if (res.data.identity === 1) {
-        } else if (res.data.identity === 2) {
-        } else {
-          uni.showToast({
-            title: "参数错误",
-            icon: "none",
-          });
-        }
+        _this.code = res.code;
+        uni.request({
+          url: `http://localhost:8080/wxapp/user/info`,
+          data: {
+            code: _this.code,
+          },
+          success(res) {
+            _this.identity = res.data.identity;
+            // 如果是管理员????
+            // if (res.data.identity === 0) {
+              uni.request({
+                url: `http://localhost:8080/wxapp/home/msg`,
+                data: {
+                  code: _this.code,
+                  event: 1,
+                },
+                success(re) {
+                  _this.info = re.data;
+                  _this.copyinfo.data = [...re.data.data];
+                },
+              });
+            // } else if (res.data.identity === 1) {
+            // } else if (res.data.identity === 2) {
+            // } else {
+            //   uni.showToast({
+            //     title: "参数错误",
+            //     icon: "none",
+            //   });
+            // }
+          },
+        });
+      },
+      fali(rej) {
+        uni.showToast({
+          title: "请求失败，请重试",
+          icon: "none",
+        });
       },
     });
   },
@@ -132,7 +154,6 @@ export default {
     uni.getUserInfo({
       success(res) {
         _this.user = JSON.parse(res.rawData);
-        console.log(_this.user);
       },
     });
   },
@@ -141,6 +162,41 @@ export default {
   update() {},
   beforeRouteUpdate() {},
   methods: {
+    //筛选方法
+
+    filter(a) {
+      try {
+        this.info.data = [...this.copyinfo.data];
+        this.copyinfo.data = [...this.info.data];
+        this.info.data = [];
+        this.copyinfo.data.forEach((element, i) => {
+          if (element.is_enviroment == a) {
+            this.info.data.push(element);
+          }
+        });
+        if (a == 1) {
+          this.is_show_left = true;
+          this.is_show_right = false;
+        }
+        if (a == 0) {
+          this.is_show_left = false;
+          this.is_show_right = true;
+        }
+      } catch (error) {
+				throw error
+			}
+    },
+    onLook(data) {
+      uni.redirectTo({
+        url: `/pages/lookorder/index?id=${data.id}`,
+        fail(rej) {
+          uni.showToast({
+            title: "网络错误，请重试",
+            icon: "none",
+          });
+        },
+      });
+    },
     getUnderway() {
       this.is_finish = false;
       this.is_peading = false;
@@ -154,7 +210,9 @@ export default {
         },
         success(re) {
           that.info = re.data;
-          console.log("管理员", that.info);
+          that.copyinfo.data = [...re.data.data];
+          that.is_show_left = false;
+          that.is_show_right = false;
         },
       });
     },
@@ -171,7 +229,9 @@ export default {
         },
         success(re) {
           that.info = re.data;
-          console.log("管理员", that.info);
+          that.copyinfo.data = [...re.data.data];
+          that.is_show_left = false;
+          that.is_show_right = false;
         },
       });
     },
@@ -188,7 +248,9 @@ export default {
         },
         success(re) {
           that.info = re.data;
-          console.log("管理员", that.info);
+          that.copyinfo.data = [...re.data.data];
+          that.is_show_left = false;
+          that.is_show_right = false;
         },
       });
     },
@@ -211,6 +273,12 @@ export default {
 <style lang="less" scoped>
 .van-tag {
   font-size: 10rpx !important;
+}
+.order_filter {
+  padding: 12rpx 20rpx;
+}
+.bottom_border {
+  border-bottom: 6rpx solid rgba(180,210,249,1);
 }
 .container {
   width: 100%;
@@ -342,22 +410,7 @@ export default {
         position: absolute;
       }
     }
-    .portrait {
-      width: 80rpx;
-      height: 80rpx;
-      border-radius: 50%;
-      background-color: #fff;
-      z-index: 1;
-      position: fixed;
-      bottom: 20rpx;
-      right: 20rpx;
-      .avatar {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        z-index: 1;
-      }
-    }
+
   }
   .card_container {
     width: 750rpx;
