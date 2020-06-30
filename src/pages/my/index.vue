@@ -14,14 +14,32 @@
     </div>
     <div class="txt_container">
       <van-cell-group title=" ">
-        <van-cell title="历史警报" value="" is-link size="large" @click="goHistory" />
+        <van-cell
+          title="历史警报"
+          value=""
+          is-link
+          size="large"
+          @click="goHistory"
+        />
       </van-cell-group>
       <template v-if="identity != 2">
         <van-cell-group title=" ">
-          <van-cell title="新建工单" value="" is-link size="large" />
+          <van-cell
+            title="新建工单"
+            value=""
+            is-link
+            size="large"
+            @click="goCreate"
+          />
         </van-cell-group>
         <van-cell-group title=" ">
-          <van-cell title="检测小组" value="（6）" is-link size="large" />
+          <van-cell
+            title="检测小组"
+            value="（6）"
+            is-link
+            size="large"
+            @click="goPersonnel"
+          />
         </van-cell-group>
         <van-cell-group title=" ">
           <van-cell title="维护小组" value="（6）" is-link size="large" />
@@ -40,7 +58,7 @@ export default {
   data() {
     return {
       code: "",
-      identity: 2,
+      identity: 0,
       info: {},
     };
   },
@@ -79,12 +97,22 @@ export default {
   update() {},
   beforeRouteUpdate() {},
   methods: {
-		goHistory(){
-			uni.navigateTo({
-				url:`/pages/history/index?code=${this.code}`
-			})
-		}
-	},
+    goPersonnel() {
+      uni.navigateTo({
+        url: `/pages/personnel/index`,
+      });
+    },
+    goCreate() {
+      uni.navigateTo({
+        url: `/pages/createOrder/index?code=${this.code}`,
+      });
+    },
+    goHistory() {
+      uni.navigateTo({
+        url: `/pages/history/index?code=${this.code}`,
+      });
+    },
+  },
   filter: {},
   computed: {},
   watch: {},

@@ -188,7 +188,7 @@ export default {
     },
     onLook(data) {
       uni.redirectTo({
-        url: `/pages/lookorder/index?id=${data.id}`,
+        url: `/pages/workOrderDetails/index?id=${data.id}`,
         fail(rej) {
           uni.showToast({
             title: "网络错误，请重试",

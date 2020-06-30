@@ -51,6 +51,8 @@ export default {
         id: e.id,
       },
       success(re) {
+				console.log(re);
+				
         _this.orderMessage = re.data.data;
         console.log(_this.orderMessage);
       },

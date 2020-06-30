@@ -1,25 +1,55 @@
 <template>
   <div>
     <div class="container">
-      <van-nav-bar title="标题" left-text="返回" left-arrow fixed />
+      <van-nav-bar
+        title="标题"
+        left-arrow
+        fixed
+        @click-left="goBack"
+      />
       <div class="header_box">
         <div class="title_text">
-          高速门架左车道摄像头断开
+          {{ text_data.data.title }}
         </div>
         <div class="time">
-          2020/06/18 11:38
+          {{ text_data.data.warning_time }}
         </div>
       </div>
       <div class="particulars">
         <van-cell-group>
-          <van-cell title="警报描述:" value="设备断开" />
-          <van-cell title="警报地区:" value="石安大区-石安高速门架01" />
-          <van-cell title="警报设备:" value="左车道摄像头01" />
-          <van-cell title="设备IP:" value="10.5.63.9" />
-          <van-cell title="设备编号:" value="1212313213213135" />
+          <van-cell
+            title="警报描述:"
+            :value="text_data.data.describe"
+            v-if="text_data.data.describe"
+          />
+          <van-cell
+            title="警报地区:"
+            :value="text_data.data.proxi"
+            v-if="text_data.data.proxi"
+          />
+          <van-cell
+            title="警报设备:"
+            :value="text_data.data.equipment"
+            v-if="text_data.data.equipment"
+          />
+          <van-cell
+            title="设备IP:"
+            :value="text_data.data.equipmen_id"
+            v-if="text_data.data.equipmen_id"
+          />
+          <van-cell
+            title="设备编号:"
+            :value="text_data.data.equipmen_serial"
+            v-if="text_data.data.equipmen_serial"
+          />
         </van-cell-group>
       </div>
-      <div v-for="(item, index) in text_data.steps" :key="index" class="steps">
+      <div
+        v-for="(item, index) in text_data.list"
+        :key="index"
+        class="steps"
+        v-if="text_data.list"
+      >
         <img
           class="ico"
           :src="
@@ -32,10 +62,10 @@
           alt=""
         />
         <span class="time">{{ item.time }}</span>
-        <div class="person">{{ item.person }}</div>
-        <div class="event">{{ item.event }}</div>
+        <div class="person" v-if="item.person">{{ item.person }}</div>
+        <div class="event" v-if="item.event">{{ item.event }}</div>
         <div class="text" v-if="item.text != ''">{{ item.text }}</div>
-        <div class="img_box">
+        <div class="img_box" v-if="item.img">
           <img
             v-for="(ele, index) in item.img"
             :key="index"
@@ -45,7 +75,13 @@
         </div>
       </div>
 
-      <van-button type="primary">进度沟通</van-button>
+      <van-button type="primary" v-if="text_data.state != '已完成'"
+        >进度沟通</van-button
+      >
+      <div v-if="text_data.data.is_look">
+        <h2>未派遣负责人</h2>
+        <van-button type="primary">指定负责人</van-button>
+      </div>
     </div>
   </div>
 </template>
@@ -57,12 +93,15 @@ export default {
   props: {},
   data() {
     return {
+      code: "",
       active: 0,
       yello: "../../static/yello.png",
       blue: "../../static/blue.png",
       green: "../../static/green.png",
+      //虚拟数据，留着没用
       text_data: {
-        steps: [
+        data: {},
+        list: [
           {
             time: "2020/02/20 20:02",
             event: "前往维护",
@@ -102,12 +141,48 @@ export default {
       },
     };
   },
+  onLoad(e) {
+    console.log(e);
+    var _this = this;
+    this.code = e.code;
+    uni.request({
+      url: `http://localhost:8080/wxapp/order/info_step`,
+      data: {
+        id: e.id,
+      },
+      success(res) {
+        _this.text_data = res.data;
+        console.log(res.data);
+      },
+		});
+		
+  },
   created() {},
   mounted() {},
   activited() {},
   update() {},
   beforeRouteUpdate() {},
-  methods: {},
+  methods: {
+    goBack() {
+      // 判断在哪里进入的，直接返回
+      var _this = this;
+      var a = getCurrentPages();
+      if (a.length == 1) {
+        uni.switchTab({
+          url: "/pages/home/index",
+          success(res) {
+            console.log(res);
+          },
+          fail(rej) {
+            console.log(rej);
+          },
+        });
+      }
+      uni.navigateBack({
+        delta: 1,
+      });
+    },
+  },
   filter: {},
   computed: {},
   watch: {},
@@ -119,7 +194,7 @@ export default {
   background: rgba(239, 239, 244, 1);
   min-height: 100vh;
   .header_box {
-		margin-top: 188rpx;
+    margin-top: 188rpx;
     width: 750rpx;
     height: 206rpx;
     background-color: #fff;

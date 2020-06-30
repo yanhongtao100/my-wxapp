@@ -2,7 +2,6 @@
   <div class="boy">
     <van-nav-bar
       title="标题"
-      left-text="返回"
       left-arrow
       fixed
       @click-left="goBack"
@@ -12,96 +11,47 @@
         <div class="tab">
           <van-tabs swipeable animated :active="active">
             <van-tab title="一周">
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
+              <div
+                class="card"
+                v-for="(item, index) in week_data"
+                :key="index"
+                @click="getCardMessage(item.id)"
+              >
+                <div class="title">{{ item.title }}</div>
+                <div class="top">警报位置：{{ item.proxi }}</div>
                 <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
-                <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
+                  <div class="left">警报时间：{{ item.time }}</div>
+                  <div class="right">经手人：{{ item.personnel }}</div>
                 </div>
               </div>
             </van-tab>
             <van-tab title="一个月">
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
+              <div
+                class="card"
+                v-for="(item, index) in month_data"
+                :key="index"
+                @click="getCardMessage(item.id)"
+              >
+                <div class="title">{{ item.title }}</div>
+                <div class="top">警报位置：{{ item.proxi }}</div>
                 <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
+                  <div class="left">警报时间：{{ item.time }}</div>
+                  <div class="right">经手人：{{ item.personnel }}</div>
                 </div>
               </div>
             </van-tab>
             <van-tab title="三个月">
-              <div class="card">
-                <div class="title">高速左摄像头连接断开</div>
-                <div class="top">警报位置：石安高速左车道</div>
+              <div
+                class="card"
+                v-for="(item, index) in three_data"
+                :key="index"
+                @click="getCardMessage(item.id)"
+              >
+                <div class="title">{{ item.title }}</div>
+                <div class="top">警报位置：{{ item.proxi }}</div>
                 <div class="text">
-                  <div class="left">警报时间：2020/02/20 20:02:20</div>
-                  <div class="right">经手人：李四四</div>
+                  <div class="left">警报时间：{{ item.time }}</div>
+                  <div class="right">经手人：{{ item.personnel }}</div>
                 </div>
               </div>
             </van-tab>
@@ -123,20 +73,45 @@ export default {
   data() {
     return {
       active: 0,
+      week_data: [],
+      month_data: [],
+      three_data: [],
     };
   },
   created() {},
   onLoad(e) {
     console.log(e);
+    var _this = this;
+    this.code = e.code;
+    uni.request({
+      url: `http://localhost:8080/wxapp/my/history`,
+      data: {
+        code: e.code,
+      },
+      success(res) {
+        _this.week_data = res.data.week.data;
+        _this.month_data = res.data.month.data;
+        _this.three_data = res.data.three_month.data;
+      },
+    });
   },
   mounted() {},
   activited() {},
   update() {},
   beforeRouteUpdate() {},
   methods: {
+    getCardMessage(id) {
+      var _this = this;
+      uni.navigateTo({
+        url: `/pages/workOrderDetails/index?id=${id}&code=${_this.code}`,
+      });
+    },
     goBack() {
       uni.switchTab({
         url: "/pages/my/index",
+        success(res) {
+          console.log(res);
+        },
       });
     },
   },
@@ -171,10 +146,10 @@ export default {
           font-size: 36rpx;
           flex: 0.215;
           background: rgba(250, 250, 250, 1);
-				}
-				/deep/.van-tab__pane{
-					min-height: 60vh;
-				}
+        }
+        /deep/.van-tab__pane {
+          min-height: 60vh;
+        }
         /deep/.van-tabs__line {
           display: none;
         }

@@ -61,6 +61,38 @@
 			}
 		},
 		{
+			"path": "pages/personnel/index",
+			"style": {
+				"navigationBarTitleText": "创建工单",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index",
+					"van-nav-bar": "/wxcomponents/vant/dist/nav-bar/index",
+					"van-cell": "/wxcomponents/vant/dist/cell/index",
+					"van-cell-group": "/wxcomponents/vant/dist/cell-group/index",
+					"van-card": "/wxcomponents/vant/dist/card/index",
+					"van-swipe-cell":"/wxcomponents/vant/dist/swipe-cell/index"
+				}
+			}
+		},
+
+		{
+			"path": "pages/createOrder/index",
+			"style": {
+				"navigationBarTitleText": "创建工单",
+				"navigationStyle": "custom",
+				"usingComponents": {
+					"van-button": "/wxcomponents/vant/dist/button/index",
+					"van-field": "/wxcomponents/vant/dist/field/index",
+					"van-nav-bar": "/wxcomponents/vant/dist/nav-bar/index",
+					"van-cell": "/wxcomponents/vant/dist/cell/index",
+					"van-cell-group": "/wxcomponents/vant/dist/cell-group/index",
+					"van-popup": "/wxcomponents/vant/dist/popup/index",
+					"van-picker": "/wxcomponents/vant/dist/picker/index"
+				}
+			}
+		},
+		{
 			"path": "pages/home/index",
 			"style": {
 				"navigationBarTitleText": "主页",
